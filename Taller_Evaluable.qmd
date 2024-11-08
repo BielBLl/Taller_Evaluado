@@ -64,7 +64,7 @@ covarianza <- matrix(c(15, 2, 5, 1,
 set.seed(2025)
 datos_numericos <- mvrnorm(150, mu = media, Sigma = covarianza)
 # Usaremos dos variables cuantitativa del 0 al 10 para la calidad de la estancia y cantidad de dolor
-estancia_hospitales<-data.frame(
+pre_estancia_hospitales<-data.frame(
   #4 Cuantitativas 
   
   altura = round(datos_numericos[,1],digits = 1),
@@ -101,8 +101,11 @@ Si la media de dias ingresado es de unos 21.57 podemos imaginarnos que no puede 
 Entonces esta variable $X\sim N(21.57,3)$, hacemos una simulación de 150 datos y la añadimos al dataframe inicial:
 
 ```{r}
-duracion_estancia<-rnorm(150,mean=21.57,sd=3)
-duracion_estancia
+set.seed(2025)
+duracion<-round(rnorm(150,mean=21.57,sd=3),1)
+estancia_hospitales<-merge(pre_estancia_hospitales,duracion)
+estancia_hospitales<-rename(estancia_hospitales,duracion_estancia=y)
+glimpse(estancia_hospitales)
 ```
 
 
@@ -113,7 +116,7 @@ Realiza un análisis descriptivo multivariantes de tu base de datos de acuerdo a
 
 Primero veremos si existe alguna correlación entre Edad-Tiempo hasta hospitalización y Horas de sueño- Dolor, usaremos la función gg pairs para conseguirlo.
 ```{r}
-dt<-estancia_hospitales %>%select(1:5,cantidad_dolor,sexo)
+dt<-estancia_hospitales %>%select(1:5,cantidad_dolor)
 dt$sexo<-c(1,2)
 glimpse(dt)
 p<-ggpairs(dt)
