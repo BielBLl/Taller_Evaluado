@@ -9,13 +9,24 @@ format:
 Rendering:
     embed-resources: true
 ---
-```{r}
+
+```{r,include=FALSE,warning=TRUE,echo=FALSE,message=TRUE}
 library(MASS)
 library(GGally)
 library(ggplot2)
 library(dplyr)
 library(XNomial)
+library(gtools)
 ```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
 
 Elige un tema que te interese (finanzas, medio ambiente, educación, cine, entre otros). En este taller, aplicarás los pasos del método científico (ver sección 1.1 de los apuntes de la asignatura) para abordar, con datos simulados, una problemática relacionada con el tema elegido. Deberás presentar un informe de tu proyecto siguiendo la estructura detallada en el documento “Recomendaciones para escribir informes de proyectos en Estadística,” que se encuentra en la sección "Práctica" de la página del curso en Aula Digital.
 
@@ -23,28 +34,27 @@ Elige un tema que te interese (finanzas, medio ambiente, educación, cine, entre
 
 Define los objetivos de tu trabajo: Describe la hipótesis general que deseas investigar y especifica los objetivos específicos necesarios para validar o refutar dicha hipótesis.
 
-Nos centraremos en el estudio de internación hospitalaria en España, definiremos como variables cuantitativas "altura","horas_de_sueño","tiempo_hasta_hospitalizacion" i "edad"
-donde la altura está en centímetros y el tiempo hosta hospitalización en días, esté último intenta reflejar el efecto de tardar demasiado a acudir a un serivició de salud.
+Nos centraremos en el estudio de internación hospitalaria en España, definiremos como variables cuantitativas "altura", "horas_de_sueño", "tiempo_hasta_hospitalizacion" y "edad", donde la altura está en centímetros y el tiempo hasta hospitalización en días, esté último intenta reflejar el efecto de tardar demasiado a acudir a un serivicio de salud.
 
-Para las ordinales escogemos expectativa, cantidad de dolor y calidad de la estancia. De los tres, el más interesante es la expectativa de los individuos de mejorar o no y poder-lo comparar posteriormente a la razón de alta.
+Para las ordinales escogemos expectativa, cantidad de dolor y calidad de la estancia. De los tres, el más interesante es la expectativa de los individuos de mejorar o no y poder lo comparar posteriormente a la razón de alta.
 
-Para finalizar escogemos como nominales el sexo y la razón de alta.
+Para finalizar, escogemos como nominales el sexo y la razón de alta.
 
-Claramente, al ser datos creados, careceran de sentido estos estudios pero procedemos imaginando que son valores genuinos.
+Claramente, al ser datos creados, carecerán de sentido estos estudios, pero procedemos imaginando que son valores genuinos.
 
 Algunas de las hipótesis que nos podríamos plantear: 
 
-- Posible relación Edad-Tiempo hasta hospitalización
+- Posible relación Edad-Tiempo hasta hospitalización:
+
 Para este objetivo necesitamos ver un test de correlación entre las dos variables y ver si esta es o no lo suficiente alta
 
-- Relación horas de sueño con cantidad de dolor 
-Similar a lo anterior con un Heat Map podremos solucionar-lo
+- Relación horas de sueño con cantidad de dolor:
 
-- Gente con bajas expectativas implica mayor incidencia de defunción y análogo con altas expectativas
+Similar a lo anterior, con un Heat Map podremos solucionar-lo.
+
+- Gente con bajas expectativas implica mayor incidencia de defunción y análogo con altas expectativas:
 
 Podemos usar contraste de hipótesis simple donde la hipótesis nula sea que la probabilidad de defunción con bajas expectativas sea mayor que por ejemplo la de expectativa estable.
-
-Nos centraremos en este último apartado ya que nos da la oportunidad de hacer contrastes de hipótesis
 
 ### Segundo paso:
 
@@ -64,7 +74,7 @@ covarianza <- matrix(c(15, 2, 5, 1,
 set.seed(2025)
 datos_numericos <- mvrnorm(150, mu = media, Sigma = covarianza)
 # Usaremos dos variables cuantitativa del 0 al 10 para la calidad de la estancia y cantidad de dolor
-pre_estancia_hospitales<-data.frame(
+estancia_hospitales<-data.frame(
   #4 Cuantitativas 
   
   altura = round(datos_numericos[,1],digits = 1),
@@ -92,29 +102,26 @@ glimpse(estancia_hospitales)
 
 Une ambas tablas utilizando un identificador simulado en una base de datos única. Emplea las funciones del paquete tidyverse explicadas en la sección 1.7.5 de los apuntes de la asignatura. Esta parte es opcional, pero te permitirá enriquecer tu base de datos y realizar análisis más completos.
 
-Usaremos el siguiente data.frame [Estancia Media](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-segun-el-sexo-el-motivo-del-alta-y-el-diagnostico-principal-identificador-api-tpx-sociedad_2589-salud_2590-emh_8591-a2022_11029-l0-01018-px) para añadir información a los valores generados, imaginemos que la población de estudio sufren turberculossi, denotado por el codigo 0103 en el data.frame del GOB.
+Usaremos el siguiente data.frame: [Estancia Media](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-segun-el-sexo-el-motivo-del-alta-y-el-diagnostico-principal-identificador-api-tpx-sociedad_2589-salud_2590-emh_8591-a2022_11029-l0-01018-px) para añadir información a los valores generados, imaginemos que la población del estudio sufren turberculosis, denotado por el codigo 0103 en el data.frame del GOB.
 
-Los dias que sulen estar hospitalizados hasta darse de alta son 21.57 para ambos sexos, 24.3 para hombres y 15.66 para mujeres. entonces es una variable normal con una sigma desconocida que nos inventaremos ya que no hay informació de esta.
+Los días que suelen estar hospitalizados hasta darse de alta son 21.57 para ambos sexos, 24.3 para hombres y 15.66 para mujeres. Entonces imaginemos que sigue una distribución normal con un sigma desconocid que nos inventaremos, ya que no hay información de esta en los bancos de datos sobre tuberculosis.
 
-Si la media de dias ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación debido a la naturaleza de la tuberculosis, pongamos $sigma^2=3$
+Si la media de días ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación e imponemos $sigma^2=3$
 
 Entonces esta variable $X\sim N(21.57,3)$, hacemos una simulación de 150 datos y la añadimos al dataframe inicial:
 
 ```{r}
 set.seed(2025)
 duracion<-round(rnorm(150,mean=21.57,sd=3),1)
-estancia_hospitales<-merge(pre_estancia_hospitales,duracion)
-estancia_hospitales<-rename(estancia_hospitales,duracion_estancia=y)
+estancia_hospitales$duracion_estancia<-duracion
 glimpse(estancia_hospitales)
 ```
-
-
 
 ### Tercer paso
 
 Realiza un análisis descriptivo multivariantes de tu base de datos de acuerdo a los objetivos de tu trabajo. Describe lo observado en el contexto del problema. 
 
-Primero veremos si existe alguna correlación entre Edad-Tiempo hasta hospitalización y Horas de sueño- Dolor, usaremos la función gg pairs para conseguirlo.
+Primero veremos si existe alguna correlación entre Edad-Tiempo_hasta_hospitalización y Horas_de_sueño- Dolor, usaremos la función ggpairs para conseguirlo.
 ```{r}
 dt<-estancia_hospitales %>%select(1:5,cantidad_dolor)
 dt$sexo<-c(1,2)
@@ -122,9 +129,9 @@ glimpse(dt)
 p<-ggpairs(dt)
 p
 ```
-Magicamente ,aun siendo datos simulados, podemos ver una leve correlación entre edad y tiempo has hospitalización. Aunque muchas de nuestras variables muestran cierta correlación menos con el sexo.
+Mágicamente, aun siendo datos simulados, podemos ver una leve correlación entre edad y tiempo_hasta_hospitalización. Aunque muchas de nuestras variables muestran cierta correlación menos con el sexo.
 
-Veamos mas de cerca el gráfico de puntos que nos aporta ggpairs:
+Veamos más de cerca el gráfico de puntos que nos aporta ggpairs:
 ```{r}
 p[4,3]
 ```
@@ -133,7 +140,7 @@ Podemos intuir una regresión lineal gracias al gráfico, ya que a mayor edad, m
 modelo<-lm(data=dt,tiempo_hasta_hospitalizacion~edad)
 summary(modelo)
 ```
-El modelo nos dice claramente que hay un gran error mínimo, por lo que no se ajusta bien a los puntos, debido al valor bajísimo de R_squared=0.1452. Por lo tanto negamos que pueda seguir una modelo de regresión lineal.
+El modelo nos dice claramente que hay un gran error mínimo y máximo, por lo que no se ajusta bien a los puntos, debido al valor bajísimo de R_squared=0.1452. Por lo tanto, negamos que pueda seguir una modelo de regresión lineal.
 
 Añadimos la recta de regresión al gráfico anterior
 ```{r}
@@ -142,16 +149,16 @@ abline(modelo,col="red")
 ```
 Al añadir la recta podemos ver claramente lo mal ajustada que está a los puntos de la gráfica.
 
-Respecto la relación Horas de Sueño-Dolor, podemos veamos mas en detalle el estudio con boxplots que nos ofrece ggpairs
+Respecto la relación Horas de Sueño-Dolor, podemos veamos mas en detalle el estudio con boxplots que nos ofrece ggpairs.
 ```{r}
 p[2,6]
 ```
-De nuevo, al ser datos simulados pueden carecer de sentido. Por lo que parece, estadísticament hablando la diferencia de horas de sueño de media no varia, carece de sentido ya que a mayor dolor mejor duerme en general los pacientes. 
+De nuevo, al ser datos simulados pueden carecer de sentido. Por lo que parece, estadísticamente hablando la media de horas de sueño de media no varía, carece de sentidom ya que a mayor dolor, más duermen en general los pacientes. 
 
-Pacientes con valores de dolor bajo parecen tener un sueño mas consistente, menos algunos valores atípicos. Si los pacientes con valores muy bajos de dolor tuviesen sueño consistente podríamos intuir alguna relación.
- La media de horas de sueño ronda las 6.8 horas, lo qual es mas o menos normal debido a la edad de los sujetos, la cual ronda los 40.
+Pacientes con valores de dolor bajo parecen tener un sueño más consistente, menos algunos valores atípicos. Si los pacientes con valores muy bajos de dolor tuviesen sueño consistente podríamos intuir alguna relación.
+ La media de horas de sueño ronda las 6.8 horas, lo cual es más o menos normal debido a la edad de los sujetos, la cual ronda los 40.
 
-```{r}
+```{r,results='hide'}
 mean(dt$horas_sueno)
 mean(dt$edad)
 ```
@@ -165,24 +172,24 @@ vap<-eigen(S)$values
 ```
 Ahora que tenemos tanto la matriz como sus valores própios, podemos calcular la varianza generalizada y la varianza total.
 
-```{r}
+```{r,results='hide'}
 v_total<-sum(vap)
 v_gen<-prod(vap)
 v_gen
 v_total
 ```
-Por lo que obtenoms una varianza generalizada de 1952.75 y una varianza total de 41.64.
+Por lo que obtenemos una varianza generalizada de 1952.75 y una varianza total de 41.64.
 
-Al entender la varianza generalizada como la dispersión global del conjunto de variables dadas, podemos ver como tiene un valor altíssimo, seguramente debido a que las variables están simuladas aleatoriamente.
+Al entender la varianza generalizada como la dispersión global del conjunto de variables dadas, podemos ver como tiene un valor altísimo, seguramente debido a que las variables están simuladas aleatoriamente.
 
-En cambio, la varianza total como media general de dispersión está relativamente baja si tenemos en cuenta que algunos valores como la altura fluctuan mucho por construcción.
+En cambio, la varianza total como media general de dispersión está relativamente baja si tenemos en cuenta que algunos valores como la altura fluctúan mucho por construcción.
 
 
 ### Cuarto paso
 
 Selecciona una de las variables no cuantitativas y modelízala con una distribución multinomial, debes estimar sus parámetros. Utiliza el modelo para calcular la probabilidad de que ocurra un evento de interés en una muestra de tamaño 20, relevante para tu problema.
 
-De las variables no cuantitativas las mas interesantes son calidad de la estancia i cantidad de dolor, escogeremos la cantidad de dolor ya que anteriormente la hemos estudiado un poco.
+De las variables no cuantitativas las más interesantes son calidad de la estancia i cantidad de dolor, escogeremos la cantidad de dolor, ya que anteriormente la hemos estudiado un poco.
 
 Usaremos el paquete XNomial para ver si sigue
 ```{r}
@@ -190,13 +197,23 @@ Usaremos el paquete XNomial para ver si sigue
 table(dt$cantidad_dolor)
 observaciones=c(25,32,32,32,29)
 freq_teorica=c(2,3,3,3,2)/sum(c(2,3,3,3,2))
+freq_teorica
 ```
 
 
 ```{r}
 resultado<-xmulti(obs=observaciones,expr=freq_teorica)
 ```
-Al ser
+Por lo tanto, no podemos rechazar la hipótesis nula por lo que la distribución de la variable "cantidad _dolor" sea una multinomial con parámetros (0.15,0.23,0.23,0.23,0.15).
+
+Ahora que sabemos que modelo sigue, veamos qué probabilidad hay de que de 20 encuestados un 80% presente dolor muy alto y 20% alto.
+
+```{r}
+objetivo<-c(0,0,0,4,16)
+dmultinom(objetivo,prob = freq_teorica)
+```
+Esto nos dará una probabilidad tan cercana al cero que podemos despreciar-la
+
 
 ### Quinto paso
 
@@ -205,9 +222,66 @@ Con las variables cuantitativas de tu base de datos, ajusta un modelo de regresi
 $$Y=\beta_0+\beta_1 X_1+ \cdots + \beta_p X_p + \epsilon$$
 Donde $Y$ es la variable cuantitativa que deseas explicar en función del resto de variables cuantitativas registradas. Además, calcula la función de score e interpreta su resultado en el contexto del problema.
 
+Intentaremos explicar la edad de los pacientes por un modelo de regresión multivariante donde $X_1$ y $X_2$ son las horas de sueño y los días hasta hospitalización respectivamente. Escogemos estos debido a que son los que presentan más correlación la variable edad.
+
+Procedemos por método directo calculando los valores $\beta_i$.
+```{r}
+x1<-dt$horas_sueno
+x2<-dt$tiempo_hasta_hospitalizacion
+y<-dt$edad
+X=cbind(1,x1,x2)
+B=solve(t(X)%*%X)%*%(t(X)%*%y)
+round(B,2)
+```
+
+Por lo tanto, $\beta_0=38.01$,$\beta_1=0,09$ y $\beta_2=0.11$.
+$$Y=38.01+0.09X_1+0.11X_2 + \epsilon$$
+Podemos también conseguir-lo usando la función lm de R además de sus errores:
+```{r}
+summary(lm(y~x1+x2))
+```
+Apartir del valor "Adjusted R_squared" podemos ver como este modelo no se acerca nada bien a los valores de Y, aun así es d'esperar debido a la naturaleza aleatoria de valores simulados con parámetros aleatorios.
+
+Debido a que no nos aporta informació, veamos si podemos explicar alguna otra variable con este método. Probemos explicar los dias hasta hospitalización con la altura y la edad. Escogemos estos debido a la relativamente alta correlación entre ellos.
+
+```{r}
+summary(lm(dt$tiempo_hasta_hospitalizacion~dt$altura+dt$edad))
+```
+De nuevo, no nos da un gran ajuste, pero es marginalmente mejor que el anterior.
+
 ### Sexto paso
 
 Realiza un contraste de hipótesis de dos medias multivariante que sea relevante para tu problema. Por ejemplo, podrías evaluar si el vector de medias de la variable cuantitativa de interés $Y$ es el mismo para dos niveles distintos de la variable no cuantitativa que modelaste como multinomial en el paso anterior. Ejecuta el contraste tanto teóricamente como con la función hotelling.test en R. Escribe la conclusión del contraste en el contexto de tu problema.
+
+Para este último nos encontraremos con problemas debido a la naturaleza de los datos, hay elementos que rondan numeros altos como la altura y otros que rondas bajos, como las horas de sueño. 
+
+Aun así, definimos $X$ y $Y$ como las variables horas de sueño y tiempo hasta hospitalización.
+
+$$X\sim N_p(\mu_1,\Sigma), \:Y\sim N_p(\mu_2,\Sigma)$$
+```{r}
+x<-dt$horas_sueno
+y<-dt$tiempo_hasta_hospitalizacion
+xmedia<-mean(x)
+ymedia<-mean(y)
+diferencia<-xmedia-ymedia
+S<-(150*cor(matrix(x))+150*cor(matrix(y)))/298
+```
+
+
+$$H_0:\mu_1=\mu_2$$
+Recordemos que $n_1=n_2=150$ al estudiar 150 sujetos y que $p=1$, ya que solo nos fijamos en un variable.
+Primero vemos teoricamente el contraste, al ser $\Sigma$ desconocida debemos usar que:
+
+$$\frac{(150+150-1-1)150*150}{(150+150-2)(150+150)}(\bar{x}-\bar{y})'\widehat{S}^{-1}(\bar{x}-\bar{y})\sim F^1_{298}$$
+```{r}
+valor_contraste<-(298)*150*150*(diferencia)*S*(diferencia)/(298*300)
+```
+
+$$33.32256\sim F^1_{298}$$
+```{r}
+df(valor_contraste,1,298)
+```
+Nos da un valor menor al nivel de significació standard por lo que rechazamos la hipótesis de que sean iguales, lo qual era de esperar ya que no tenemos variables con medias similares
 
 ### Último paso
 
