@@ -15,6 +15,7 @@ library(MASS)
 library(GGally)
 library(ggplot2)
 library(dplyr)
+library(tidyverse)
 library(XNomial)
 library(gtools)
 ```
@@ -155,6 +156,13 @@ p[2,6]
 ```
 De nuevo, al ser datos simulados pueden carecer de sentido. Por lo que parece, estadísticamente hablando la media de horas de sueño de media no varía, carece de sentidom ya que a mayor dolor, más duermen en general los pacientes. 
 
+Veamos con un contraste si la hipótesis nula $H_0: \mu_i=\mu_j\; \forall i,j$ es o no cierta. Al no saber si los valores de varianza son o no iguales usaremos la función pairwise.wilcox.test para descubrir si tienen mismas medias.
+```{r}
+sub_data<-subset(dt,select = c(horas_sueno,cantidad_dolor))
+pairwise.wilcox.test(sub_data$horas_sueno,sub_data$cantidad_dolor,p.adjust.methods="bonferroni")
+```
+Gracias a la función que hemos comentado podemos afirmar la hipótesis nula con muchísima seguridad, este resultado perfecto parece muy extraño, pero se han comprobado con otros metodos de contraste con resultados iguales, algunos de los intentados son pairwise.t.test, kruskal, etc... Por lo tanto, estadísticamente hablando tienen la misma media.
+
 Pacientes con valores de dolor bajo parecen tener un sueño más consistente, menos algunos valores atípicos. Si los pacientes con valores muy bajos de dolor tuviesen sueño consistente podríamos intuir alguna relación.
  La media de horas de sueño ronda las 6.8 horas, lo cual es más o menos normal debido a la edad de los sujetos, la cual ronda los 40.
 
@@ -236,7 +244,7 @@ round(B,2)
 
 Por lo tanto, $\beta_0=38.01$,$\beta_1=0,09$ y $\beta_2=0.11$.
 $$Y=38.01+0.09X_1+0.11X_2 + \epsilon$$
-Podemos también conseguir-lo usando la función lm de R además de sus errores:
+Podemos también conseguir-lo usando la función lm de R que además da sus errores:
 ```{r}
 summary(lm(y~x1+x2))
 ```
@@ -248,6 +256,14 @@ Debido a que no nos aporta informació, veamos si podemos explicar alguna otra v
 summary(lm(dt$tiempo_hasta_hospitalizacion~dt$altura+dt$edad))
 ```
 De nuevo, no nos da un gran ajuste, pero es marginalmente mejor que el anterior.
+
+Encontremos la función score de la distribución $Y=\beta X$, donde $\beta=(\beta_1,\beta_2)$ y $X=(1,X_1,X_2)$ por lo tanto tenemos que $Y\sim N(X,\beta,\sigma^2I)$ gracias a la teoria. 
+
+$$f(Y|\beta,\sigma)=\frac{1}{(2\pi\sigma^2)^{\frac{n}{2}}}\exp(-\frac{1}{2\sigma^2}(Y-X\beta)'(Y-X\beta))$$
+Aplicamos logaritmo y derivamos respecto $\beta$ y obtenemos:
+$$Score(\beta)=\frac{\partial l}{\partial \beta}=\frac{1}{\sigma^2}X^T(Y-X\beta)$$
+Como podemos interpretar esta función?
+Dos casos, si la función score vale 0 esto implicará que $Y=X\beta$ y por lo tanto los que minimizan el error $\epsilon$ de del modelo de regresión. Si, en cambio, este valor no da 0 implicará que existe un error $\epsilon >0$, y por lo tanto podriamos encontrar un ajuste mejor para el modelo de regresión multivariante.
 
 ### Sexto paso
 
