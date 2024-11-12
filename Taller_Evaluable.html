@@ -80,7 +80,6 @@ window.Quarto = {
   <li><a href="#cuarto-paso" id="toc-cuarto-paso" class="nav-link" data-scroll-target="#cuarto-paso">Cuarto paso</a></li>
   <li><a href="#quinto-paso" id="toc-quinto-paso" class="nav-link" data-scroll-target="#quinto-paso">Quinto paso</a></li>
   <li><a href="#sexto-paso" id="toc-sexto-paso" class="nav-link" data-scroll-target="#sexto-paso">Sexto paso</a></li>
-  <li><a href="#último-paso" id="toc-último-paso" class="nav-link" data-scroll-target="#último-paso">Último paso</a></li>
   </ul>
 </nav>
 </div>
@@ -110,6 +109,7 @@ window.Quarto = {
 <section id="primer-paso" class="level3">
 <h3 class="anchored" data-anchor-id="primer-paso">Primer paso:</h3>
 <p>Define los objetivos de tu trabajo: Describe la hipótesis general que deseas investigar y especifica los objetivos específicos necesarios para validar o refutar dicha hipótesis.</p>
+<p><a href="https://github.com/BielBLl/Taller_Evaluado">Enlace al GitHub</a></p>
 <p>Nos centraremos en el estudio de internación hospitalaria en España, definiremos como variables cuantitativas “altura”, “horas_de_sueño”, “tiempo_hasta_hospitalizacion” y “edad”, donde la altura está en centímetros y el tiempo hasta hospitalización en días, esté último intenta reflejar el efecto de tardar demasiado a acudir a un serivicio de salud.</p>
 <p>Para las ordinales escogemos expectativa, cantidad de dolor y calidad de la estancia. De los tres, el más interesante es la expectativa de los individuos de mejorar o no y poder lo comparar posteriormente a la razón de alta.</p>
 <p>Para finalizar, escogemos como nominales el sexo y la razón de alta.</p>
@@ -155,7 +155,7 @@ $ razon_alta                   &lt;chr&gt; "Otras Causas", "Fallecimiento", "Mej
 <p>Une ambas tablas utilizando un identificador simulado en una base de datos única. Emplea las funciones del paquete tidyverse explicadas en la sección 1.7.5 de los apuntes de la asignatura. Esta parte es opcional, pero te permitirá enriquecer tu base de datos y realizar análisis más completos.</p>
 <p>Usaremos el siguiente data.frame: <a href="https://datos.gob.es/es/catalogo/ea0010587-estancia-media-segun-el-sexo-el-motivo-del-alta-y-el-diagnostico-principal-identificador-api-tpx-sociedad_2589-salud_2590-emh_8591-a2022_11029-l0-01018-px">Estancia Media</a> para añadir información a los valores generados, imaginemos que la población del estudio sufren turberculosis, denotado por el codigo 0103 en el data.frame del GOB.</p>
 <p>Los días que suelen estar hospitalizados hasta darse de alta son 21.57 para ambos sexos, 24.3 para hombres y 15.66 para mujeres. Entonces imaginemos que sigue una distribución normal con un sigma desconocid que nos inventaremos, ya que no hay información de esta en los bancos de datos sobre tuberculosis.</p>
-<p>Si la media de días ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación e imponemos <span class="math inline">\(sigma^2=3\)</span></p>
+<p>Si la media de días ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación e imponemos <span class="math inline">\(\sigma^2=3\)</span></p>
 <p>Entonces esta variable <span class="math inline">\(X\sim N(21.57,3)\)</span>, hacemos una simulación de 150 datos y la añadimos al dataframe inicial:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -179,17 +179,6 @@ $ duracion_estancia            &lt;dbl&gt; 23.4, 21.7, 23.9, 25.4, 22.7, 21.1, 2
 <p>Realiza un análisis descriptivo multivariantes de tu base de datos de acuerdo a los objetivos de tu trabajo. Describe lo observado en el contexto del problema.</p>
 <p>Primero veremos si existe alguna correlación entre Edad-Tiempo_hasta_hospitalización y Horas_de_sueño- Dolor, usaremos la función ggpairs para conseguirlo.</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 150
-Columns: 7
-$ altura                       &lt;dbl&gt; 170.4, 169.7, 170.9, 170.0, 170.5, 172.8,…
-$ horas_sueno                  &lt;dbl&gt; 6, 6, 8, 6, 5, 7, 11, 1, 5, 10, 9, 3, 8, …
-$ tiempo_hasta_hospitalizacion &lt;dbl&gt; 16.8, 13.5, 16.8, 20.7, 15.3, 10.4, 12.9,…
-$ edad                         &lt;dbl&gt; 39.2, 40.2, 39.3, 41.2, 40.2, 39.9, 39.3,…
-$ expectativa                  &lt;ord&gt; Estable, Estable, Mejorar, Empeorar, Esta…
-$ cantidad_dolor               &lt;ord&gt; Medio, Bajo, Muy Bajo, Muy Alto, Muy Alto…
-$ sexo                         &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,…</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -209,7 +198,7 @@ $ sexo                         &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1
 </div>
 </div>
 </div>
-<p>Podemos intuir una regresión lineal gracias al gráfico, ya que a mayor edad, mayor el tiempo hasta hospitalización de medio.</p>
+<p>Podemos intuir una regresión lineal muy muy de débil gracias al gráfico, ya que a mayor edad, mayor el tiempo hasta hospitalización de medio.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -232,7 +221,7 @@ Multiple R-squared:  0.1509,    Adjusted R-squared:  0.1452
 F-statistic:  26.3 on 1 and 148 DF,  p-value: 9.008e-07</code></pre>
 </div>
 </div>
-<p>El modelo nos dice claramente que hay un gran error mínimo y máximo, por lo que no se ajusta bien a los puntos, debido al valor bajísimo de R_squared=0.1452. Por lo tanto, negamos que pueda seguir una modelo de regresión lineal.</p>
+<p>El modelo nos dice claramente que hay un gran error mínimo y máximo, por lo que no se ajusta bien a los puntos debido al valor bajísimo de R_squared=0.1452. Por lo tanto, negamos que pueda seguir una modelo de regresión lineal.</p>
 <p>Añadimos la recta de regresión al gráfico anterior</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -255,26 +244,36 @@ F-statistic:  26.3 on 1 and 148 DF,  p-value: 9.008e-07</code></pre>
 </div>
 </div>
 <p>De nuevo, al ser datos simulados pueden carecer de sentido. Por lo que parece, estadísticamente hablando la media de horas de sueño de media no varía, carece de sentidom ya que a mayor dolor, más duermen en general los pacientes.</p>
+<p>Veamos con un contraste si la hipótesis nula <span class="math inline">\(H_0: \mu_i=\mu_j\; \forall i,j\)</span> es o no cierta. Al no saber si los valores de varianza son o no iguales usaremos la función pairwise.wilcox.test para descubrir si tienen mismas medias.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  sub_data$horas_sueno and sub_data$cantidad_dolor 
+
+         Muy Bajo Bajo Medio Alto
+Bajo     1        -    -     -   
+Medio    1        1    -     -   
+Alto     1        1    1     -   
+Muy Alto 1        1    1     1   
+
+P value adjustment method: holm </code></pre>
+</div>
+</div>
+<p>Gracias a la función que hemos comentado podemos afirmar la hipótesis nula con muchísima seguridad, este resultado perfecto parece muy extraño, pero se han comprobado con otros metodos de contraste con resultados iguales, algunos de los intentados son pairwise.t.test, kruskal, etc… Por lo tanto, estadísticamente hablando tienen la misma media.</p>
 <p>Pacientes con valores de dolor bajo parecen tener un sueño más consistente, menos algunos valores atípicos. Si los pacientes con valores muy bajos de dolor tuviesen sueño consistente podríamos intuir alguna relación. La media de horas de sueño ronda las 6.8 horas, lo cual es más o menos normal debido a la edad de los sujetos, la cual ronda los 40.</p>
 <p>Para las variables cuantitativas de tu base de datos, calcula e interpreta la información que proporciona la varianza generalizada y la varianza total.</p>
 <p>Encontremos la matriz de convarianzas de los datos cuantitativos primero:</p>
 <p>Ahora que tenemos tanto la matriz como sus valores própios, podemos calcular la varianza generalizada y la varianza total.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1952.756</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 41.64963</code></pre>
-</div>
-</div>
-<p>Por lo que obtenoms una varianza generalizada de 1952.75 y una varianza total de 41.64.</p>
-<p>Al entender la varianza generalizada como la dispersión global del conjunto de variables dadas, podemos ver como tiene un valor altíssimo, seguramente debido a que las variables están simuladas aleatoriamente.</p>
-<p>En cambio, la varianza total como media general de dispersión está relativamente baja si tenemos en cuenta que algunos valores como la altura fluctuan mucho por construcción.</p>
+<p>Por lo que obtenemos una varianza generalizada de 1952.75 y una varianza total de 41.64.</p>
+<p>Al entender la varianza generalizada como la dispersión global del conjunto de variables dadas, podemos ver como tiene un valor altísimo, seguramente debido a que las variables están simuladas aleatoriamente.</p>
+<p>En cambio, la varianza total como media general de dispersión está relativamente baja si tenemos en cuenta que algunos valores como la altura fluctúan mucho por construcción.</p>
 </section>
 <section id="cuarto-paso" class="level3">
 <h3 class="anchored" data-anchor-id="cuarto-paso">Cuarto paso</h3>
 <p>Selecciona una de las variables no cuantitativas y modelízala con una distribución multinomial, debes estimar sus parámetros. Utiliza el modelo para calcular la probabilidad de que ocurra un evento de interés en una muestra de tamaño 20, relevante para tu problema.</p>
-<p>De las variables no cuantitativas las mas interesantes son calidad de la estancia i cantidad de dolor, escogeremos la cantidad de dolor ya que anteriormente la hemos estudiado un poco.</p>
+<p>De las variables no cuantitativas las más interesantes son calidad de la estancia i cantidad de dolor, escogeremos la cantidad de dolor, ya que anteriormente la hemos estudiado un poco.</p>
 <p>Usaremos el paquete XNomial para ver si sigue</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -292,8 +291,8 @@ Muy Bajo     Bajo    Medio     Alto Muy Alto
 P value (LLR) = 0.7072</code></pre>
 </div>
 </div>
-<p>Por lo tanto, no podemos rechazar la hipótesis nula por lo que la distribución de la variable “cantidad _dolor” sigui una multinomial con parámetros (0.15,0.23,0.23,0.23,0.15).</p>
-<p>Ahora que sabemos que modelo sigue, veamos que probabilidad hay de que de 20 enquestados, un de 80% presente dolor muy alto y 20% alto.</p>
+<p>Por lo tanto, no podemos rechazar la hipótesis nula por lo que la distribución de la variable “cantidad _dolor” sea una multinomial con parámetros (0.15,0.23,0.23,0.23,0.15).</p>
+<p>Ahora que sabemos que modelo sigue, veamos qué probabilidad hay de que de 20 encuestados un 80% presente dolor muy alto y 20% alto.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.353293e-12</code></pre>
@@ -305,7 +304,7 @@ P value (LLR) = 0.7072</code></pre>
 <h3 class="anchored" data-anchor-id="quinto-paso">Quinto paso</h3>
 <p>Con las variables cuantitativas de tu base de datos, ajusta un modelo de regresión multivariante en la forma:</p>
 <p><span class="math display">\[Y=\beta_0+\beta_1 X_1+ \cdots + \beta_p X_p + \epsilon\]</span> Donde <span class="math inline">\(Y\)</span> es la variable cuantitativa que deseas explicar en función del resto de variables cuantitativas registradas. Además, calcula la función de score e interpreta su resultado en el contexto del problema.</p>
-<p>Intentaremos explicar la edad de los pacientas por un modelos de regresión multivariante donde <span class="math inline">\(X_1\)</span> y <span class="math inline">\(X_2\)</span> son las horas de sueño y los dias hasta hospitalización respectivamente. Escogemos estos debido a que son los que presentan mas correlación la variable edad.</p>
+<p>Intentaremos explicar la edad de los pacientes por un modelo de regresión multivariante donde <span class="math inline">\(X_1\)</span> y <span class="math inline">\(X_2\)</span> son las horas de sueño y los días hasta hospitalización respectivamente. Escogemos estos debido a que son los que presentan más correlación la variable edad.</p>
 <p>Procedemos por método directo calculando los valores <span class="math inline">\(\beta_i\)</span>.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -315,7 +314,7 @@ x1  0.09
 x2  0.11</code></pre>
 </div>
 </div>
-<p>Por lo tanto, <span class="math inline">\(\beta_0=38.01\)</span>,<span class="math inline">\(\beta_1=0,09\)</span> y <span class="math inline">\(\beta_2=0.11\)</span>. <span class="math display">\[Y=38.01+0.09X_1+0.11X_2 + \epsilon\]</span> Podemos también conseguir-lo usando la función lm de R además de sus errores:</p>
+<p>Por lo tanto, <span class="math inline">\(\beta_0=38.01\)</span>,<span class="math inline">\(\beta_1=0,09\)</span> y <span class="math inline">\(\beta_2=0.11\)</span>. <span class="math display">\[Y=38.01+0.09X_1+0.11X_2 + \epsilon\]</span> Podemos también conseguir-lo usando la función lm de R que además da sus errores:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -339,8 +338,8 @@ Multiple R-squared:  0.1766,    Adjusted R-squared:  0.1654
 F-statistic: 15.77 on 2 and 147 DF,  p-value: 6.251e-07</code></pre>
 </div>
 </div>
-<p>Apartir del valor Adjusted R_squared podemos ver como este modelo no se acerca muy bien a los valores de Y, aun así es d’esperar debido a la naturaleza aleatoria de valores simulados con parámetros aleatorios.</p>
-<p>Debido a que no nos aporta informació veamos si podemos explicar alguna otra variable con este método. Probemos explicar los dias hasta hospitalización con la altura y la edad. Escogemos estos debido a la relativamente alta correlación entre ellos.</p>
+<p>Apartir del valor “Adjusted R_squared” podemos ver como este modelo no se acerca nada bien a los valores de Y, aun así es d’esperar debido a la naturaleza aleatoria de valores simulados con parámetros aleatorios.</p>
+<p>Debido a que no nos aporta informació, veamos si podemos explicar alguna otra variable con este método. Probemos explicar los dias hasta hospitalización con la altura y la edad. Escogemos estos debido a la relativamente alta correlación entre ellos.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -364,20 +363,26 @@ Multiple R-squared:  0.232, Adjusted R-squared:  0.2215
 F-statistic:  22.2 on 2 and 147 DF,  p-value: 3.767e-09</code></pre>
 </div>
 </div>
-<p>De nuevo, no nos da un gran ajusta, peró es marginalmente mejor que el anterior.</p>
+<p>De nuevo, no nos da un gran ajuste, pero es marginalmente mejor que el anterior.</p>
+<p>Encontremos la función score de la distribución <span class="math inline">\(Y=\beta X\)</span>, donde <span class="math inline">\(\beta=(\beta_1,\beta_2)\)</span> y <span class="math inline">\(X=(1,X_1,X_2)\)</span> por lo tanto tenemos que <span class="math inline">\(Y\sim N(X,\beta,\sigma^2I)\)</span> gracias a la teoria.</p>
+<p><span class="math display">\[f(Y|\beta,\sigma)=\frac{1}{(2\pi\sigma^2)^{\frac{n}{2}}}\exp(-\frac{1}{2\sigma^2}(Y-X\beta)'(Y-X\beta))\]</span> Aplicamos logaritmo y derivamos respecto <span class="math inline">\(\beta\)</span> y obtenemos: <span class="math display">\[Score(\beta)=\frac{\partial l}{\partial \beta}=\frac{1}{\sigma^2}X^T(Y-X\beta)\]</span> Como podemos interpretar esta función? Dos casos, si la función score vale 0 esto implicará que <span class="math inline">\(Y=X\beta\)</span> y por lo tanto los que minimizan el error <span class="math inline">\(\epsilon\)</span> de del modelo de regresión. Si, en cambio, este valor no da 0 implicará que existe un error <span class="math inline">\(\epsilon &gt;0\)</span>, y por lo tanto podriamos encontrar un ajuste mejor para el modelo de regresión multivariante.</p>
 </section>
 <section id="sexto-paso" class="level3">
 <h3 class="anchored" data-anchor-id="sexto-paso">Sexto paso</h3>
 <p>Realiza un contraste de hipótesis de dos medias multivariante que sea relevante para tu problema. Por ejemplo, podrías evaluar si el vector de medias de la variable cuantitativa de interés <span class="math inline">\(Y\)</span> es el mismo para dos niveles distintos de la variable no cuantitativa que modelaste como multinomial en el paso anterior. Ejecuta el contraste tanto teóricamente como con la función hotelling.test en R. Escribe la conclusión del contraste en el contexto de tu problema.</p>
-</section>
-<section id="último-paso" class="level3">
-<h3 class="anchored" data-anchor-id="último-paso">Último paso</h3>
-<p>Recuerda que:</p>
-<ul>
-<li><p>De acuerdo con las recomendaciones para redactar informes de proyectos en Estadística, tu informe debe incluir conclusiones, recomendaciones y bibliografía.</p></li>
-<li><p>Crea un repositorio en GitHub para tu proyecto y asegúrate de añadir en el encabezado YAML la siguiente opción necesaria para la renderización sin problemas:</p></li>
-</ul>
-<p>¡Buena suerte y disfruta del proceso!</p>
+<p>Para este último nos encontraremos con problemas debido a la naturaleza de los datos, hay elementos que rondan numeros altos como la altura y otros que rondas bajos, como las horas de sueño.</p>
+<p>Aun así, definimos <span class="math inline">\(X\)</span> y <span class="math inline">\(Y\)</span> como las variables horas de sueño y tiempo hasta hospitalización.</p>
+<p><span class="math display">\[X\sim N_p(\mu_1,\Sigma), \:Y\sim N_p(\mu_2,\Sigma)\]</span></p>
+<p><span class="math display">\[H_0:\mu_1=\mu_2\]</span> Recordemos que <span class="math inline">\(n_1=n_2=150\)</span> al estudiar 150 sujetos y que <span class="math inline">\(p=1\)</span>, ya que solo nos fijamos en un variable. Primero vemos teoricamente el contraste, al ser <span class="math inline">\(\Sigma\)</span> desconocida debemos usar que:</p>
+<p><span class="math display">\[\frac{(150+150-1-1)150*150}{(150+150-2)(150+150)}(\bar{x}-\bar{y})'\widehat{S}^{-1}(\bar{x}-\bar{y})\sim F^1_{298}\]</span></p>
+<p><span class="math display">\[33.32256\sim F^1_{298}\]</span></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>              [,1]
+[1,] 2.399437e-144</code></pre>
+</div>
+</div>
+<p>Nos da un valor menor al nivel de significació standard por lo que rechazamos la hipótesis de que sean iguales, lo qual era de esperar ya que no tenemos variables con medias similares</p>
 </section>
 
 </main>

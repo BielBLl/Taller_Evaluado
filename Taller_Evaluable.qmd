@@ -35,6 +35,8 @@ Elige un tema que te interese (finanzas, medio ambiente, educación, cine, entre
 
 Define los objetivos de tu trabajo: Describe la hipótesis general que deseas investigar y especifica los objetivos específicos necesarios para validar o refutar dicha hipótesis.
 
+[Enlace al GitHub](https://github.com/BielBLl/Taller_Evaluado)
+
 Nos centraremos en el estudio de internación hospitalaria en España, definiremos como variables cuantitativas "altura", "horas_de_sueño", "tiempo_hasta_hospitalizacion" y "edad", donde la altura está en centímetros y el tiempo hasta hospitalización en días, esté último intenta reflejar el efecto de tardar demasiado a acudir a un serivicio de salud.
 
 Para las ordinales escogemos expectativa, cantidad de dolor y calidad de la estancia. De los tres, el más interesante es la expectativa de los individuos de mejorar o no y poder lo comparar posteriormente a la razón de alta.
@@ -107,7 +109,7 @@ Usaremos el siguiente data.frame: [Estancia Media](https://datos.gob.es/es/catal
 
 Los días que suelen estar hospitalizados hasta darse de alta son 21.57 para ambos sexos, 24.3 para hombres y 15.66 para mujeres. Entonces imaginemos que sigue una distribución normal con un sigma desconocid que nos inventaremos, ya que no hay información de esta en los bancos de datos sobre tuberculosis.
 
-Si la media de días ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación e imponemos $sigma^2=3$
+Si la media de días ingresado es de unos 21.57 podemos imaginarnos que no puede tener gran desviación e imponemos $\sigma^2=3$
 
 Entonces esta variable $X\sim N(21.57,3)$, hacemos una simulación de 150 datos y la añadimos al dataframe inicial:
 
@@ -126,7 +128,7 @@ Primero veremos si existe alguna correlación entre Edad-Tiempo_hasta_hospitaliz
 ```{r}
 dt<-estancia_hospitales %>%select(1:5,cantidad_dolor)
 dt$sexo<-c(1,2)
-glimpse(dt)
+#cambiamos a numerico para que ggpairs pueda usarse
 p<-ggpairs(dt)
 p
 ```
@@ -136,12 +138,12 @@ Veamos más de cerca el gráfico de puntos que nos aporta ggpairs:
 ```{r}
 p[4,3]
 ```
-Podemos intuir una regresión lineal gracias al gráfico, ya que a mayor edad, mayor el tiempo hasta hospitalización de medio.
+Podemos intuir una regresión lineal muy muy de débil gracias al gráfico, ya que a mayor edad, mayor el tiempo hasta hospitalización de medio.
 ```{r}
 modelo<-lm(data=dt,tiempo_hasta_hospitalizacion~edad)
 summary(modelo)
 ```
-El modelo nos dice claramente que hay un gran error mínimo y máximo, por lo que no se ajusta bien a los puntos, debido al valor bajísimo de R_squared=0.1452. Por lo tanto, negamos que pueda seguir una modelo de regresión lineal.
+El modelo nos dice claramente que hay un gran error mínimo y máximo, por lo que no se ajusta bien a los puntos debido al valor bajísimo de R_squared=0.1452. Por lo tanto, negamos que pueda seguir una modelo de regresión lineal.
 
 Añadimos la recta de regresión al gráfico anterior
 ```{r}
@@ -298,23 +300,6 @@ $$33.32256\sim F^1_{298}$$
 df(valor_contraste,1,298)
 ```
 Nos da un valor menor al nivel de significació standard por lo que rechazamos la hipótesis de que sean iguales, lo qual era de esperar ya que no tenemos variables con medias similares
-
-### Último paso
-
-Recuerda que:
-
-* De acuerdo con las recomendaciones para redactar informes de proyectos en Estadística, tu informe debe incluir conclusiones, recomendaciones y bibliografía.
-
-* Crea un repositorio en GitHub para tu proyecto y asegúrate de añadir en el encabezado YAML la siguiente opción necesaria para la renderización sin problemas:
-
-
-```{r, eval=FALSE}
-Rendering:
-    embed-resources: true
-
-```
-
-¡Buena suerte y disfruta del proceso!
 
 
 
